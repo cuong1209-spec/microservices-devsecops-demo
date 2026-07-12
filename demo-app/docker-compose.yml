@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - product-service
+      - order-service
+    networks:
+      - app-network
+
+  product-service:
+    build: ./product-service
+    expose:
+      - "3000"
+    networks:
+      - app-network
+
+  order-service:
+    build: ./order-service
+    expose:
+      - "5000"
+    depends_on:
+      - product-service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
