@@ -663,35 +663,63 @@ Commit:      5c0733b0a259ac386981b0f604fd78efc86c83bf
 \subsection{Kết quả Semgrep (SAST)}
 
 Semgrep phát hiện lỗi Command Injection trong endpoint tìm kiếm của Product Service:
-\begin{lstlisting}[language=bash, caption={Kết quả phát hiện Command Injection của Semgrep}]
-Findings:
+\begin{lstlisting}[language=bash, caption={Kết quả quét SAST thực tế của Semgrep trên GitHub Actions}]
+Scan Summary:
+  Findings: 17 (17 blocking)
+  Rules run: 495  |  Targets scanned: 18
+
+Selected Blocking Findings:
+  demo-app/order-service/app.py
+    >> generic.secrets.security.detected-stripe-api-key [BLOCKING]
+       Stripe API Key detected
+       12| STRIPE_API_KEY = "sk_live_51Habc..."
+
+    >> python.lang.security.insecure-transport [BLOCKING]
+       HTTP request detected - use HTTPS instead
+       36| response = requests.get(product_url, timeout=5)
+
+    >> python.flask.security.avoid_app_run_with_bad_host [BLOCKING]
+       Flask running with host 0.0.0.0 exposes app publicly
+       52| app.run(host='0.0.0.0', port=PORT)
+
+  demo-app/order-service/Dockerfile
+    >> dockerfile.security.missing-user [BLOCKING]
+       Container may run as root - no USER specified
+
   demo-app/product-service/server.js
-    javascript.lang.security.audit.dangerous-exec.dangerous-exec
-    Severity: ERROR
-    Line 22: exec(`echo Search query: ${query}`, ...)
-    Message: Detected user-controlled data in exec(). This could allow
-             an attacker to execute arbitrary code.
+    >> javascript.express.security.express-check-csrf-middleware [BLOCKING]
+       No CSRF middleware detected in Express application
+        3| const app = express();
+
+Error: Process completed with exit code 1.
 \end{lstlisting}
 
 \subsection{Kết quả Trivy (SCA và Container Scan)}
 
-\begin{lstlisting}[language=bash, caption={Kết quả phát hiện lỗ hổng SCA của Trivy}]
-Product Service (npm - package.json)
-Total: 1 (CRITICAL: 1)
-+--------+-----------------+----------+---------+---------------------------+
-| Library | Vulnerability   | Severity | Version | Title                     |
-+--------+-----------------+----------+---------+---------------------------+
-| lodash  | CVE-2019-10744  | CRITICAL | 4.17.11 | Prototype Pollution       |
-+--------+-----------------+----------+---------+---------------------------+
+\begin{lstlisting}[language=bash, caption={Kết quả quét SCA thực tế của Trivy trên GitHub Actions}]
+Report Summary:
++--------------------------------------+------+------------------+---------+
+| Target                               | Type | Vulnerabilities  | Secrets |
++--------------------------------------+------+------------------+---------+
+| demo-app/order-service/requirements  | pip  |        1         |         |
+| demo-app/order-service/app.py        | text |                  |    1    |
++--------------------------------------+------+------------------+---------+
 
-Order Service (pip - requirements.txt)
-Total: 1 (MEDIUM: 1)
-+----------+-----------------+----------+---------+---------------------------+
-| Library  | Vulnerability   | Severity | Version | Title                     |
-+----------+-----------------+----------+---------+---------------------------+
-| requests | CVE-2018-18074  | MEDIUM   | 2.20.0  | Leak of credentials via   |
-|          |                 |          |         | HTTP redirect             |
-+----------+-----------------+----------+---------+---------------------------+
+demo-app/order-service/requirements.txt (pip)
+Total: 1 (HIGH: 1, CRITICAL: 0)
++-----------+-----------------+----------+-----------+----------------------------+
+| Library   | Vulnerability   | Severity | Installed | Title                      |
+|           |                 |          | Version   |                            |
++-----------+-----------------+----------+-----------+----------------------------+
+| werkzeug  | CVE-2024-34069  | HIGH     | 2.2.3     | User may execute code on a |
+|           |                 | (fixed)  | -> 3.0.3  | developer's machine        |
++-----------+-----------------+----------+-----------+----------------------------+
+
+demo-app/order-service/app.py (secrets)
+Total: 1 (HIGH: 0, CRITICAL: 1)
+CRITICAL: Stripe (stripe-secret-token)
+  Stripe Secret Key detected at line 12
+  12| STRIPE_API_KEY = "****************************"
 \end{lstlisting}
 
 \section{Đánh giá hiệu năng Pipeline}
