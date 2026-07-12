@@ -698,27 +698,25 @@ Error: Process completed with exit code 1.
 
 \begin{lstlisting}[language=bash, caption={Kết quả quét SCA thực tế của Trivy trên GitHub Actions}]
 Report Summary:
-+--------------------------------------+------+------------------+---------+
-| Target                               | Type | Vulnerabilities  | Secrets |
-+--------------------------------------+------+------------------+---------+
-| demo-app/order-service/requirements  | pip  |        1         |         |
-| demo-app/order-service/app.py        | text |                  |    1    |
-+--------------------------------------+------+------------------+---------+
+- Target: demo-app/order-service/requirements.txt (Type: pip)
+  Vulnerabilities: 1 | Secrets: 0
+- Target: demo-app/order-service/app.py (Type: text)
+  Vulnerabilities: 0 | Secrets: 1
 
+Findings:
 demo-app/order-service/requirements.txt (pip)
+=============================================
 Total: 1 (HIGH: 1, CRITICAL: 0)
-+-----------+-----------------+----------+-----------+----------------------------+
-| Library   | Vulnerability   | Severity | Installed | Title                      |
-|           |                 |          | Version   |                            |
-+-----------+-----------------+----------+-----------+----------------------------+
-| werkzeug  | CVE-2024-34069  | HIGH     | 2.2.3     | User may execute code on a |
-|           |                 | (fixed)  | -> 3.0.3  | developer's machine        |
-+-----------+-----------------+----------+-----------+----------------------------+
+- Library:   werkzeug (Severity: HIGH)
+- Vuln ID:   CVE-2024-34069
+- Installed: 2.2.3 -> Fixed Version: 3.0.3
+- Title:     User may execute code on developer's machine
 
 demo-app/order-service/app.py (secrets)
+=======================================
 Total: 1 (HIGH: 0, CRITICAL: 1)
-CRITICAL: Stripe (stripe-secret-token)
-  Stripe Secret Key detected at line 12
+- Type:      CRITICAL (stripe-secret-token)
+- Details:   Stripe Secret Key detected at line 12
   12| STRIPE_API_KEY = "****************************"
 \end{lstlisting}
 
