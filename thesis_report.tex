@@ -728,6 +728,7 @@ Total: 1 (HIGH: 0, CRITICAL: 1)
 \centering
 \caption{So sánh thời gian thực thi Pipeline: Tuần tự vs. Song song (có Cache)}
 \label{tab:performance-comparison}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{|l|c|c|c|}
 \hline
 \textbf{Giai đoạn quét} & \textbf{Thực thi tuần tự} & \textbf{Song song - Lần 1} & \textbf{Song song - Lần 2+} \\
@@ -745,7 +746,8 @@ Container Scan (Trivy) & 4 phút & 3 phút & 50 giây \\
 \hline
 \textbf{Tiết kiệm so với tuần tự} & -- & \textbf{38\%} & \textbf{71\%} \\
 \hline
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \textit{Nhận xét:} Kỹ thuật kết hợp Parallel Execution và Vulnerability DB Caching giúp giảm thời gian thực thi pipeline xuống còn \textbf{71\%} so với phương pháp tuần tự không có cache. Điều này đảm bảo vòng lặp phản hồi (feedback loop) cho lập trình viên được duy trì dưới 5 phút --- một ngưỡng quan trọng để bảo toàn trải nghiệm phát triển tốt theo khuyến nghị của Google DORA Metrics.
