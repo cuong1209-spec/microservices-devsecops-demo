@@ -9,7 +9,7 @@ PORT = 5000
 # Critical Security Vulnerability (CWE-798): Hardcoded credentials
 # This simulates a developer accidentally committing credentials.
 # Gitleaks in the CI/CD pipeline will flag this pattern.
-STRIPE_API_KEY = "stripe-secret-key-DEMO_FAKE_NOT_REAL_sk51HabcXXXXXXXXXXXXX"
+STRIPE_API_KEY = "sk_live_51Habc1234567890123456789"
 
 orders = [
     {"id": 101, "product_id": 1, "quantity": 1, "status": "Pending"},
