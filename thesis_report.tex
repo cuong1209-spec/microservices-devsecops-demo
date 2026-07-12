@@ -644,14 +644,21 @@ POST & /api/orders & 201 Created & \textcolor{codegreen}{\checkmark} PASS (giao 
 
 Gitleaks phát hiện thành công chuỗi Stripe API Key hardcoded trong file \texttt{order-service/app.py}:
 \begin{lstlisting}[language=bash, caption={Kết quả phát hiện của Gitleaks}]
-Finding:     STRIPE_API_KEY = "stripe-key-DEMO_FAKE_NOT_REAL_sk51HabcXXX..."
-Secret:      stripe-key-DEMO_FAKE_NOT_REAL_sk51HabcXXX...
+Finding:     STRIPE_API_KEY = "REDACTED"
+Secret:      REDACTED
 RuleID:      stripe-access-token
-Entropy:     3.89
+Entropy:     4.271370
 File:        demo-app/order-service/app.py
-Line:        14
-Commit:      [commit-hash]
+Line:        12
+Commit:      5c0733b0a259ac386981b0f604fd78efc86c83bf
 \end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{gitleaks_results.png}
+    \caption{Log quét bảo mật và phát hiện Secret của Gitleaks trên GitHub Actions}
+    \label{fig:gitleaks-results}
+\end{figure}
 
 \subsection{Kết quả Semgrep (SAST)}
 
